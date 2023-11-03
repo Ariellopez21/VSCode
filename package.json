@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "fs.promises": "^0.1.2",
+    "hola": "^0.0.1",
+    "three": "^0.156.1"
+  },
+  "name": "vscode",
+  "version": "1.0.0",
+  "main": "main.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
