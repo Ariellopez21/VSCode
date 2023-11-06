@@ -4,6 +4,6 @@ const material = new THREE.MeshBasicMaterial( { side: THREE.DoubleSide } );
 const referenceObject = new THREE.Mesh( geometry, material );
 
 referenceObject.name = 'cubo'; 
-referenceObject.visible = false;    // Por defecto False.
+referenceObject.visible = true;    // Por defecto False.
 
 export {referenceObject}; //Export Object.

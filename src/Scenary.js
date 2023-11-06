@@ -46,13 +46,13 @@ function setPositions(floor, roof, front, back, right, left){
                         0 );
 }
 
-const tamFijoX = 10, tamFijoY = 2, tamFijoZ = 2;
+const tamFijoX = 10, tamFijoY = 1.75, tamFijoZ = 2;
 const floor = assignCharacteristics(    "Floor",        tamFijoX, tamFijoZ, 0.5, 0  ,   "/img/scenary/roof.jpg");
 const roof = assignCharacteristics(     "Roof",         tamFijoX, tamFijoZ, 0.5, 0  ,   "/img/scenary/roof.jpg");
-const wallFront = assignCharacteristics("WallFront",    tamFijoX, tamFijoY, 0  , 0  ,   "/img/scenary/roof.jpg");
-const wallRight = assignCharacteristics("WallRight",    tamFijoZ, tamFijoY, 0  , 0.5,   "/img/scenary/roof.jpg");
-const wallLeft = assignCharacteristics( "WallLeft",     tamFijoZ, tamFijoY, 0  , 0.5,   "/img/scenary/roof.jpg");
-const wallBack = assignCharacteristics( "WallBack",     tamFijoX, tamFijoY, 0  , 0  ,   "/img/scenary/roof.jpg");
+const wallFront = assignCharacteristics("WallFront",    tamFijoX, tamFijoY, 0  , 0  ,   "/img/scenary/texturaGris.jpg");
+const wallRight = assignCharacteristics("WallRight",    tamFijoZ, tamFijoY, 0  , 0.5,   "/img/scenary/texturaGris.jpg");
+const wallLeft = assignCharacteristics( "WallLeft",     tamFijoZ, tamFijoY, 0  , 0.5,   "/img/scenary/texturaGris.jpg");
+const wallBack = assignCharacteristics( "WallBack",     tamFijoX, tamFijoY, 0  , 0  ,   "/img/scenary/texturaGris.jpg");
 
 setPositions(floor, roof, wallFront, wallBack, wallRight, wallLeft);
 

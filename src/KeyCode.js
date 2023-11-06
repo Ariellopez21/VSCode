@@ -102,4 +102,10 @@ let KeyCode = {
     CLOSE_BRACKET:	221,
     SINGLE_QUOTE:	222,
 }
-export default KeyCode;
+let limit = {
+    front: 0,
+    back: 1,
+    right: 2,
+    left: 3,
+}
+export {KeyCode, limit};

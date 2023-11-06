@@ -1,17 +1,17 @@
 import {scene} from "./src/Scene.js";
-import {camera, FollowObject} from "./src/Camera.js";
+import {camera, FollowObject, wallLimits} from "./src/Camera.js";
 import {renderer} from "./src/Renderer.js";
 import {referenceObject} from "./src/referenceObject.js";
-import {artArray, FollowArt, artRotation} from "./src/artObject.js";
+import {marco, art1, art2, art3, slide1, slide2, slide3, space, FollowArt} from "./src/artObject.js";
 import resize from "./src/Resize.js";
 import * as Scenary from "./src/Scenary.js";
 import loopMachine from "./src/LoopMachine.js";
 import keyListener from "./src/KeyListener.js";
-import KeyCode from "./src/KeyCode.js";
-//import mouse from "./src/Mouse.js";
-
+import {KeyCode, limit} from "./src/KeyCode.js";
+import {onMouseClick} from "./src/Mouse.js";
 let setLookBehind = false;
-let i = 0;
+
+let limitArr = [true, true, true, true];
 
 /*------------------------------------------------------------*/
 /************************ ADD TO SCENE ************************/
@@ -19,10 +19,14 @@ let i = 0;
 scene.add( 
     camera,
     referenceObject,
-    artArray[0], 
-    artArray[1], 
-    artArray[2], 
-    artArray[3] 
+    marco,
+    art1,
+    art2,
+    art3,
+    slide1, 
+    slide2, 
+    slide3, 
+    space
 );
 scene.add(  
     Scenary.floor,        
@@ -33,10 +37,10 @@ scene.add(
     Scenary.wallBack 
 );
 
-artArray[0].material.needsUpdate = false;  
-artArray[1].material.needsUpdate = false;  
-artArray[2].material.needsUpdate = false;  
-artArray[3].material.needsUpdate = false;  
+marco.material.needsUpdate = true;  
+art1.material.needsUpdate = true;  
+art2.material.needsUpdate = true;  
+art3.material.needsUpdate = true;  
 
 /*------------------------------------------------------------*/
 /************************ SET POSITION ************************/
@@ -44,41 +48,63 @@ artArray[3].material.needsUpdate = false;
 
 camera.position.set( 
     0,
-    referenceObject.geometry.parameters.height * 2, 
+    0.5, 
     Scenary.wallBack.position.z + referenceObject.geometry.parameters.depth
 );  
+camera.rotateY(Math.PI);
 referenceObject.position.set(    
     0,
     referenceObject.geometry.parameters.height / 2, 
     camera.position.z + referenceObject.geometry.parameters.depth * 2
 );
-artArray[0].position.set( 
+marco.position.set( 
     1.5, 
-    artArray[0].geometry.parameters.height / 2, 
-    0
+    0.5, 
+    Scenary.wallBack.position.z + 0.01
 );
-artArray[1].position.set( 
+art1.position.set( 
     -1.5, 
-    artArray[1].geometry.parameters.height / 2, 
-    0
+    0.5,
+    Scenary.wallBack.position.z + 0.01
 );
-artArray[2].position.set( 
+art2.position.set( 
     4.5, 
-    artArray[2].geometry.parameters.height / 2, 
-    0
+    0.5,
+    Scenary.wallBack.position.z + 0.01
 );
-artArray[3].position.set( 
+art3.position.set( 
     -4.5, 
-    artArray[3].geometry.parameters.height / 2, 
-    0
+    0.5,
+    Scenary.wallBack.position.z + 0.01
 );
-
+slide1.position.set(
+    1.5, 
+    0.5,
+    Scenary.wallFront.position.z - 0.01
+)
+slide2.position.set(
+    -1.5, 
+    0.5,
+    Scenary.wallFront.position.z - 0.01
+)
+slide3.position.set(
+    4.5, 
+    0.5,
+    Scenary.wallFront.position.z - 0.01
+)
+space.position.set(
+    -4.5,
+    0.5,
+    Scenary.wallFront.position.z - 0.01
+)
+console.log(camera);    
 /*------------------------------------------------------------*/
 /************************* START LOOP *************************/
 /*------------------------------------------------------------*/
 
 loopMachine.addCallback(() => {
 
+    
     /*------------------------------------------------------------*/
     /**************** ObjectToFollow Transitions ******************/
     /*------------------------------------------------------------*/
@@ -86,10 +112,25 @@ loopMachine.addCallback(() => {
     if(keyListener.isPressed(KeyCode.KEY_O))        referenceObject.position.set(0, referenceObject.geometry.parameters.height / 2, 0);
     if(keyListener.isPressed(KeyCode.ENTER))        referenceObject.translateY(0.1);
     if(keyListener.isPressed(KeyCode.BACKSPACE))    referenceObject.translateY(-0.1);
-     if(keyListener.isPressed(KeyCode.ARROW_RIGHT))  referenceObject.translateX(-0.1);        
-     if(keyListener.isPressed(KeyCode.ARROW_DOWN))   referenceObject.translateZ(-0.1);
-     if(keyListener.isPressed(KeyCode.ARROW_UP))     referenceObject.translateZ(0.1);
-     if(keyListener.isPressed(KeyCode.ARROW_LEFT))   referenceObject.translateX(0.1);
+
+    if(keyListener.isPressed(KeyCode.ARROW_RIGHT) && limitArr[limit.right]){    // Movimiento hacía la derecha
+        camera.translateX(0.025);
+        wallLimits(camera, limitArr[limit.right]);
+    }
+    if(keyListener.isPressed(KeyCode.ARROW_DOWN) && limitArr[limit.back]){      // Movimiento hacía atrás
+        camera.translateZ(0.025);
+        wallLimits(camera, limitArr[limit.back]);
+    }   
+    if(keyListener.isPressed(KeyCode.ARROW_UP) && limitArr[limit.front]){       // Movimiento hacía adelante
+        camera.translateZ(-0.025);
+        wallLimits(camera, limitArr[limit.front]);
+    }     
+    if(keyListener.isPressed(KeyCode.ARROW_LEFT) && limitArr[limit.left]){      // Movimiento hacía la izquierda
+        camera.translateX(-0.025);
+        wallLimits(camera, limitArr[limit.left]);
+    }   
+    if(keyListener.isPressed(KeyCode.KEY_E))        camera.rotateY(0.1);        // Rotación hacía la izquierda
+    if(keyListener.isPressed(KeyCode.KEY_R))        camera.rotateY(-0.1);       // Rotación hacía la derecha
 
     /*------------------------------------------------------------*/
     /************************ CAMERA ZOOM *************************/
@@ -98,10 +139,12 @@ loopMachine.addCallback(() => {
     if(keyListener.isPressed(KeyCode.KEY_Q)){
         camera.fov += 0.5; // Cambia el valor de campo de visión
         camera.updateProjectionMatrix(); // Actualiza la matriz de proyección
+        console.log(camera.fov);
     }
     if(keyListener.isPressed(KeyCode.KEY_W)){
         camera.fov -= 0.5; // Cambia el valor de campo de visión
         camera.updateProjectionMatrix(); // Actualiza la matriz de proyección
+        console.log(camera.fov);
     }
 
     /*------------------------------------------------------------*/
@@ -116,14 +159,14 @@ loopMachine.addCallback(() => {
     /*------------------------------------------------------------*/
     /********************* SET LOOK BEHIND ************************/
     /*------------------------------------------------------------*/
-    if(keyListener.isPressed(KeyCode.KEY_E))   setLookBehind = true;
-    if(keyListener.isPressed(KeyCode.KEY_R))   setLookBehind = false;
-    FollowObject(referenceObject, setLookBehind);
+    // if(keyListener.isPressed(KeyCode.KEY_E))   setLookBehind = true;
+    // if(keyListener.isPressed(KeyCode.KEY_R))   setLookBehind = false;
+    //FollowObject(referenceObject, setLookBehind);
 
     /*------------------------------------------------------------*/
     /************** Set movements to ObjectToFollow ***************/
     /*------------------------------------------------------------*/
-    if(keyListener.down(KeyCode.KEY_L)) {  // PRESS KEY_L TO GO TO RIGHT IMG
+    /*if(keyListener.down(KeyCode.KEY_L)) {  // PRESS KEY_L TO GO TO RIGHT IMG
         i -= 1;
         i = artRotation(artArray, i);
     }
@@ -131,7 +174,8 @@ loopMachine.addCallback(() => {
         i += 1;
         i = artRotation(artArray, i);
         console.log("camera:" + camera.position);
-    } 
+    } */
+
     renderer.render(scene, camera);
 });
 

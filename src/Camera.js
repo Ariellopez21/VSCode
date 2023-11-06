@@ -1,6 +1,7 @@
 // import cube from "./Cube.js";
+import * as Scenary from "./Scenary.js";
 
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.05, 1000 );
+const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, 1000 );
 
 /**
  * Posee un objeto camara dentro de la funcion que realiza movimientos para seguir a una determinada distancia.
@@ -26,4 +27,28 @@ function FollowObject(objectToFollow, setLookBehind) {
     camera.lookAt(targetPosition);
 }
 
-export {camera, FollowObject}; //Export Objects and Methods.
+function wallLimits(camera, limit) {
+
+    if(camera.position.z > Scenary.wallFront.position.z - 0.1){
+        console.log("Limite pared Frontal");
+        limit = false;
+        camera.position.z -= 0.035;
+    } /* Ajustar Posicionamiento respecto a Pared Frontal */
+    if(camera.position.z < Scenary.wallBack.position.z + 0.1){
+        console.log("Limite pared Trasera");
+        limit = false;
+        camera.position.z += 0.035;
+    } /* Ajustar Posicionamiento respecto a Pared Trasera */
+    if(camera.position.x < Scenary.wallRight.position.x + 0.1){
+        console.log("Limite pared Derecha");
+        limit = false;
+        camera.position.x += 0.035;
+    } /* Ajustar Posicionamiento respecto a Pared Lateral Derecha */
+    if(camera.position.x > Scenary.wallLeft.position.x - 0.1){
+        console.log("Limite pared Izquierda");
+        limit = false;
+        camera.position.x -= 0.035;
+    } /* Ajustar Posicionamiento respecto a Pared Lateral Izquierda */
+}
+
+export {camera, FollowObject, wallLimits}; //Export Objects and Methods.
